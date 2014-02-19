@@ -1,6 +1,6 @@
 {
   "name": "lucene-complexity",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Module to test the complexity of a lucene query and replace field names based on a mapping object.",
   "main": "index.js",
   "directories": {
