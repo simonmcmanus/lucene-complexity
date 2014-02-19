@@ -66,6 +66,19 @@ describe('should not replace a value in the lookup (keys only)',
   }
 );
 
+describe('given a query with complexity of 0', function() {
+  var out;
+  before(function(done) {
+    var query = 'created: SIMON';
+    out = parser.replaceKeys(query, {'created': '_created'});
+    done();
+  })
+  it('should still replace any key values', function() {
+    assert.equal(out, '_created: SIMON')
+  })
+})
+
+// test for white space either side of keys/ maybe values.
 
 describe('examples from the lucene docs: ', function() {
  // title:"The Right Way" AND text:go

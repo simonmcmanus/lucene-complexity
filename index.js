@@ -21,6 +21,7 @@ function doSplit(query) {
 *                                           allowed
  */
 exports.isComplex = function(query, allowedComplexity) {
+  console.log('ds' ,query, doSplit(query) );
   return allowedComplexity <= doSplit(query).length - 1;
 }
 
@@ -49,10 +50,15 @@ exports.replaceKeys = function(query, lookups) {
   var c = arr.length;
   while (c--) {
     var pairs = arr[c].split(':');
+
+console.log('---->', lookups[pairs[0]], '"'+pairs[0]+'"');
      // if there is a keypair and the value exists in the lookup obj
-    if (pairs.length > 1 && lookups[pairs[0]]) {
-      query = query.replace(arr[c], lookups[pairs[0]] + ':' + pairs[1]);
+    var key = pairs[0].trim() // get rid of white space either side.
+    if (pairs.length > 1 && lookups[key]) {
+
+      query = query.replace(arr[c], ' ' + lookups[key] + ':' + pairs[1]);
     }
   }
+  console.log('q', query);
   return query;
 }
