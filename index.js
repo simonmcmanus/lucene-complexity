@@ -21,7 +21,7 @@ function doSplit(query) {
 *                                           allowed
  */
 exports.isComplex = function(query, allowedComplexity) {
-  console.log('ds' ,query, doSplit(query) );
+  console.log('ds', doSplit(query).length - 1 );
   return allowedComplexity <= doSplit(query).length - 1;
 }
 
@@ -47,18 +47,33 @@ exports.isComplex = function(query, allowedComplexity) {
  */
 exports.replaceKeys = function(query, lookups) {
   var arr = doSplit(query);
-  var c = arr.length;
-  while (c--) {
-    var pairs = arr[c].split(':');
+  console.log('arr is', arr.length);
 
-console.log('---->', lookups[pairs[0]], '"'+pairs[0]+'"');
-     // if there is a keypair and the value exists in the lookup obj
+  for(var d = 0; d <= arr.length; d++) {
+    if(!arr[d]) {
+      break;
+    }
+    var pairs = arr[d].split(':');
     var key = pairs[0].trim() // get rid of white space either side.
-    if (pairs.length > 1 && lookups[key]) {
+    var levels = key.split('.');
+    var newLevel = false;
 
-      query = query.replace(arr[c], ' ' + lookups[key] + ':' + pairs[1]);
+    // check each level for tokens to replace.
+    if(levels.length > 1) {
+      // not 100% sure this is correct - do we realy want to break up the term?
+      var c = levels.length;
+      while(c--) {  // see if lookups exist at any level.
+        if(lookups[levels[c]]) {
+          levels[c] = lookups[levels[c]];
+        }
+      }
+      var newLevel = levels.join('.');
+    }
+
+    if (pairs.length > 1 && lookups[key] || newLevel) {
+      var newKey = (newLevel) ? newLevel : lookups[key];
+      query = query.replace(arr[d], ' ' +  newKey + ':' + pairs[1]);
     }
   }
-  console.log('q', query);
-  return query;
+  return query.trim();
 }

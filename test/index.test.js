@@ -52,6 +52,21 @@ describe('given a query with a field name in the lookup table',
 );
 
 
+
+describe('Given a query of meta.common.name:bobi',
+  function() {
+    var out;
+    before(function(done) {
+      var query = 'meta.common.name:bobi';
+      out = parser.replaceKeys(query, {'meta': '_cm'});
+      done();
+    });
+    it('should only replace the field name', function() {
+      assert.equal(out, '_cm.common.name:bobi')
+    });
+  }
+);
+
 describe('should not replace a value in the lookup (keys only)',
   function() {
     var out;
@@ -76,7 +91,23 @@ describe('given a query with complexity of 0', function() {
   it('should still replace any key values', function() {
     assert.equal(out, '_created: SIMON')
   })
-})
+});
+
+describe('given a very complicated query with no lots of inconsistant white space', function() {
+  var out;
+  before(function(done) {
+    var query = 'created : SIMON AND time: 123 AND book:bacon in books AND tod :aa';
+    out = parser.replaceKeys(query, {
+      created: '_created',
+      time: '_epoch',
+      book: '_book'
+    });
+    done();
+  })
+  it('should still replace any key values', function() {
+    assert.equal(out, '_created: SIMON AND _epoch: 123 AND _book:bacon in books AND tod :aa')
+  })
+});
 
 // test for white space either side of keys/ maybe values.
 
