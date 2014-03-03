@@ -29,7 +29,6 @@ describe('calculating complexity', function() {
       done()
     });
     it('isComplex should return true', function() {
-      console.log(out)
       assert.equal(out, false);
     })
   });
