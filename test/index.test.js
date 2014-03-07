@@ -15,7 +15,6 @@ describe('calculating complexity', function() {
       done()
     });
     it('isComplex should return true', function() {
-      console.log(out)
       assert.equal(out, true);
     })
   });
@@ -104,7 +103,7 @@ describe('given a very complicated query with no lots of inconsistant white spac
     done();
   })
   it('should still replace any key values', function() {
-    assert.equal(out, '_created: SIMON AND _epoch: 123 AND _book:bacon in books AND tod :aa')
+    assert.equal(out, '_created: SIMON AND _epoch: 123 AND _book:bacon in books AND tod:aa')
   })
 });
 
@@ -117,3 +116,36 @@ describe('examples from the lucene docs: ', function() {
  // roam~0.8
  // mod_date:[20020101 TO 20030101]
 })
+
+
+describe('replace key', function() {
+
+  describe('Given a very simple lookup (_cm', function() {
+    var out;
+    before(function() {
+      out = parser.replaceKey('meta', {
+        'meta': '_cm'
+      });
+    })
+
+    it('it should correctly replace the key', function() {
+      assert.equal(out, '_cm');
+    });
+  });
+
+  describe('Given a query with dots _cm.common.name', function() {
+    var out;
+    before(function() {
+      out = parser.replaceKey('meta.common.name', {
+        'meta': '_cm'
+      });
+    })
+    it('should replace on the meta with _cm', function() {
+      var expected = '_cm.common.name';
+      assert.equal(out, expected);
+    })
+  });
+});
+
+
+// check given a search term with no field.

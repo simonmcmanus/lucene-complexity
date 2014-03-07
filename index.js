@@ -21,7 +21,6 @@ function doSplit(query) {
 *                                           allowed
  */
 exports.isComplex = function(query, allowedComplexity) {
-  console.log('ds', doSplit(query).length - 1 );
   return allowedComplexity <= doSplit(query).length - 1;
 }
 
@@ -46,34 +45,52 @@ exports.isComplex = function(query, allowedComplexity) {
  * @return {string}          the updated query
  */
 exports.replaceKeys = function(query, lookups) {
-  var arr = doSplit(query);
-  console.log('arr is', arr.length);
-
+  var arr = doSplit(query); // split on and/or
   for(var d = 0; d <= arr.length; d++) {
+
     if(!arr[d]) {
       break;
     }
+
     var pairs = arr[d].split(':');
-    var key = pairs[0].trim() // get rid of white space either side.
-    var levels = key.split('.');
-    var newLevel = false;
-
-    // check each level for tokens to replace.
-    if(levels.length > 1) {
-      // not 100% sure this is correct - do we realy want to break up the term?
-      var c = levels.length;
-      while(c--) {  // see if lookups exist at any level.
-        if(lookups[levels[c]]) {
-          levels[c] = lookups[levels[c]];
-        }
-      }
-      var newLevel = levels.join('.');
+    var end = '';
+    var newKey = pairs[0].trim() // get rid of white space either side.
+    if(pairs[1]) { // we only actually need to do the lookup when we know we
+      // have a value and a key.
+      newKey = exports.replaceKey(newKey, lookups);
+      end = ':' + pairs[1];
     }
-
-    if (pairs.length > 1 && lookups[key] || newLevel) {
-      var newKey = (newLevel) ? newLevel : lookups[key];
-      query = query.replace(arr[d], ' ' +  newKey + ':' + pairs[1]);
-    }
+    query = query.replace(arr[d], ' ' +  newKey + end);
   }
   return query.trim();
 }
+
+/**
+ * Used just a a key.
+ * @param  {String} key     The key to lookup, eg '_cm'
+ * @param  {Object} lookups The object containing the lookup values eg: {
+ *                            _cm: 'meta'
+ *                          }
+ * @return {String}         the updated value. eg: 'meta'
+ */
+exports.replaceKey = function(key, lookups) {
+  function doCheck(item) {
+    if(lookups[item]) {
+      return lookups[item];
+    }else {
+      return item;
+    }
+  }
+
+  var out;
+  var levels = key.split('.');
+  if(levels.length > 1) {
+    for(var c = 0; c < levels.length; c++) {
+      levels[c] = doCheck(levels[c]);
+    }
+    out = levels.join('.');
+  } else {
+    out = doCheck(key);
+  }
+  return out;
+};
