@@ -20,6 +20,18 @@ describe('calculating complexity', function() {
   });
 
 
+  describe('given a query with complexity of two and a max complexity of 2', function() {
+    var out;
+    before(function(done) {
+      var query = 'title:"The Right Way" AND text:go AND hi';
+      out = parser.isComplex(query, 2);
+      done()
+    });
+    it('isComplex should return false', function() {
+      assert.equal(out, false);
+    })
+  });
+
   describe('given a query with complexity of two and an is complexity limit of 3 but with some words like tomorrow in there (containing or)', function() {
     var out;
     before(function(done) {

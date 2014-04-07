@@ -21,7 +21,7 @@ function doSplit(query) {
 *                                           allowed
  */
 exports.isComplex = function(query, allowedComplexity) {
-  return allowedComplexity <= doSplit(query).length - 1;
+  return allowedComplexity < doSplit(query).length - 1;
 }
 
 
