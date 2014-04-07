@@ -9,7 +9,7 @@
  * @return {array}       array of the query, excluding operators.
  */
 function doSplit(query) {
-  return query.split(/AND|OR|IN|NOT*/g);
+  return query.split(/\sAND\s|\sOR\s|\sIN\s|\sNOT\s*/g);
 }
 
 /**
@@ -33,7 +33,7 @@ exports.isComplex = function(query, allowedComplexity) {
  *
  * so:
  *
- * replaceKeys('bacon AND creator:simon', {creator: '_creator'});
+ * replaceKeys('bamov AND creator:simon', {creator: '_creator'});
  *
  * would result in:
  *
@@ -60,7 +60,7 @@ exports.replaceKeys = function(query, lookups) {
       newKey = exports.replaceKey(newKey, lookups);
       end = ':' + pairs[1];
     }
-    query = query.replace(arr[d], ' ' +  newKey + end);
+    query = query.replace(arr[d], newKey + end);
   }
   return query.trim();
 }

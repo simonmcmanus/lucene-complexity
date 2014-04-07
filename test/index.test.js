@@ -20,6 +20,21 @@ describe('calculating complexity', function() {
   });
 
 
+  describe('given a query with complexity of two and an is complexity limit of 3 but with some words like tomorrow in there (containing or)', function() {
+    var out;
+    before(function(done) {
+      var query = 'InformationSecurityClassification_1396538457046:Public AND PublicGoLiveDate_1396538566694:[TOMORROW TO *]';
+
+
+      out = parser.isComplex(query, 2);
+      done()
+    });
+    it('isComplex should return true', function() {
+      assert.equal(out, false);
+    })
+  });
+
+
   describe('given a query with complexity of one and an is complexity limit of 2', function() {
     var out;
     before(function(done) {
